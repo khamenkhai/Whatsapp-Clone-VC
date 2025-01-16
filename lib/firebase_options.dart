@@ -25,8 +25,8 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      case TargetPlatform.iOS:
-        return ios;
+      // case TargetPlatform.iOS:
+      //   return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -50,20 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCwTZgT4-0M4bZBp2vx1OolR_Uu5MFeJqo',
-    appId: '1:723755046318:android:d04ca2d6e18d0eb632a43f',
-    messagingSenderId: '723755046318',
-    projectId: 'message-app-cdf33',
-    storageBucket: 'message-app-cdf33.firebasestorage.app',
+    apiKey: 'AIzaSyDS-eHyUlnfVj9JMAZojLJS7WtExTV0oP4',
+    appId: '1:1047187387240:android:5c0b81d7455836ba915cdd',
+    messagingSenderId: '1047187387240',
+    projectId: 'khaiproject-8d74f',
+    databaseURL: 'https://khaiproject-8d74f-default-rtdb.firebaseio.com',
+    storageBucket: 'khaiproject-8d74f.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBSDWRP0gJNvfu50pTKYfUqRDDEkQsQrUI',
-    appId: '1:867907366273:ios:6f8cdf10bb49ba7ecf0c80',
-    messagingSenderId: '867907366273',
-    projectId: 'whatsapp-backend-c4d7f',
-    storageBucket: 'whatsapp-backend-c4d7f.appspot.com',
-    iosClientId: '867907366273-j9hk7oisbdk70t3q3ri6n5qveuj30ohh.apps.googleusercontent.com',
-    iosBundleId: 'com.example.whatsappUi',
-  );
+  // static const FirebaseOptions ios = FirebaseOptions(
+  //   apiKey: 'AIzaSyBSDWRP0gJNvfu50pTKYfUqRDDEkQsQrUI',
+  //   appId: '1:867907366273:ios:6f8cdf10bb49ba7ecf0c80',
+  //   messagingSenderId: '867907366273',
+  //   projectId: 'whatsapp-backend-c4d7f',
+  //   storageBucket: 'whatsapp-backend-c4d7f.appspot.com',
+  //   iosClientId: '867907366273-j9hk7oisbdk70t3q3ri6n5qveuj30ohh.apps.googleusercontent.com',
+  //   iosBundleId: 'com.example.whatsappUi',
+  // );
 }
