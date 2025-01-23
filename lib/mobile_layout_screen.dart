@@ -9,6 +9,8 @@ import 'package:vc_testing/features/select_contacts/screens/select_contacts_scre
 import 'package:vc_testing/features/chat/widgets/contacts_list.dart';
 import 'package:vc_testing/features/status/screens/confirm_status_screen.dart';
 import 'package:vc_testing/features/status/screens/status_contacts_screen.dart';
+import 'package:vc_testing/noti_service.dart';
+import 'package:vc_testing/old_noti_service.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
   const MobileLayoutScreen({Key? key}) : super(key: key);
@@ -20,11 +22,20 @@ class MobileLayoutScreen extends ConsumerStatefulWidget {
 class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late TabController tabBarController;
+
+  NotificationsService notificationsService = NotificationsService();
+
   @override
   void initState() {
     super.initState();
     tabBarController = TabController(length: 3, vsync: this);
+    init();
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  Future init() async {
+    notificationsService.requestPermission();
+    notificationsService.initFirebaseNotification(context);
   }
 
   @override
@@ -46,7 +57,6 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
         ref.read(authControllerProvider).setUserState(false);
         break;
       case AppLifecycleState.hidden:
-        // TODO: Handle this case.
     }
   }
 
@@ -70,7 +80,20 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           actions: [
             IconButton(
               icon: const Icon(Icons.search, color: Colors.grey),
-              onPressed: () {},
+              onPressed: () async {
+                NotificationsService notificationsService =
+                    NotificationsService();
+                String deviceToken = await notificationsService.getToken();
+
+                print("device token : ${deviceToken}");
+
+                notificationsService.sendNotification(
+                  deviceToken: deviceToken,
+                  context: context,
+                  title: "Noti title!",
+                  body: "noti body",
+                );
+              },
             ),
             PopupMenuButton(
               icon: const Icon(

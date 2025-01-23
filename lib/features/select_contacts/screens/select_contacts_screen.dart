@@ -22,12 +22,7 @@ class SelectContactsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Select contact'),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
+          
           IconButton(
             onPressed: () {},
             icon: const Icon(

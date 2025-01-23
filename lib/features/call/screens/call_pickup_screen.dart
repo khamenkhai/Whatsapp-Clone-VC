@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vc_testing/call_test/call_kit_service.dart';
+import 'package:vc_testing/common/utils/utils.dart';
 import 'package:vc_testing/features/call/controller/call_controller.dart';
 import 'package:vc_testing/features/call/screens/call_screen.dart';
 import 'package:vc_testing/models/call.dart';
 
-class CallPickupScreen extends ConsumerWidget {
+class CallPickupScreen extends ConsumerStatefulWidget {
   final Widget scaffold;
   const CallPickupScreen({
     Key? key,
@@ -13,81 +15,129 @@ class CallPickupScreen extends ConsumerWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CallPickupScreen> createState() => _CallPickupScreenState();
+}
+
+class _CallPickupScreenState extends ConsumerState<CallPickupScreen> {
+  final CallKitService _callKitService = CallKitService();
+  bool _hasTriggeredIncomingCall = false; // Track if call has been triggered
+
+  void _triggerIncomingCall({
+    required String callerName,
+    required String roomId,
+    required String localUserID,
+  }) {
+    if (_hasTriggeredIncomingCall) return; // Prevent multiple triggers
+
+    _callKitService.showIncomingCall(
+      callerName: callerName,
+      roomId: roomId,
+      context: context,
+      localUserID: localUserID,
+    );
+
+    setState(() {
+      _hasTriggeredIncomingCall = true; // Mark the call as triggered
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
       stream: ref.watch(callControllerProvider).callStream,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.data() != null) {
-          Call call =
+          Call callData =
               Call.fromMap(snapshot.data!.data() as Map<String, dynamic>);
 
-          if (!call.hasDialled) {
-            return Scaffold(
-              body: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Incoming Call',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(call.callerPic),
-                      radius: 60,
-                    ),
-                    const SizedBox(height: 50),
-                    Text(
-                      call.callerName,
-                      style: const TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 75),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.call_end,
-                              color: Colors.redAccent),
-                        ),
-                        const SizedBox(width: 25),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CallScreen(
-                                  channelId: call.callId,
-                                  call: call,
-                                  isGroupChat: false,
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.call,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+          // Trigger incoming call only if not dialed yet
+          if (!callData.hasDialled && !_hasTriggeredIncomingCall) {
+            _triggerIncomingCall(
+              callerName: callData.callerName,
+              roomId: callData.callId,
+              localUserID: callData.callId,
             );
           }
+
+          // Display the UI for the incoming call
+          // return _oldScaffold(callData, context);
         }
-        return scaffold;
+
+        // Return the default scaffold if there's no incoming call data
+        return widget.scaffold;
       },
     );
   }
+
+  // Scaffold _oldScaffold(Call callData, BuildContext context) {
+  //   return Scaffold(
+  //     body: Container(
+  //       alignment: Alignment.center,
+  //       padding: const EdgeInsets.symmetric(vertical: 20),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Text(
+  //             'Incoming Call : ${callData.callId}',
+  //             style: TextStyle(
+  //               fontSize: 30,
+  //               color: Colors.white,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 50),
+  //           CircleAvatar(
+  //             backgroundImage: NetworkImage(callData.callerPic),
+  //             radius: 60,
+  //           ),
+  //           const SizedBox(height: 50),
+  //           Text(
+  //             callData.callerName,
+  //             style: const TextStyle(
+  //               fontSize: 25,
+  //               color: Colors.white,
+  //               fontWeight: FontWeight.w900,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 75),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               IconButton(
+  //                 onPressed: () {
+  //                   Navigator.pop(context); // End the call
+  //                 },
+  //                 icon: const Icon(Icons.call_end, color: Colors.redAccent),
+  //               ),
+  //               const SizedBox(width: 25),
+  //               IconButton(
+  //                 onPressed: () async {
+  //                   await requestPermissions().then((value) {
+  //                     if (value) {
+  //                       Navigator.push(
+  //                         context,
+  //                         MaterialPageRoute(
+  //                           builder: (context) => CallScreen(
+  //                             localUserID: callData.receiverId,
+  //                             localUserName: callData.receiverName,
+  //                             roomId: callData.callId,
+  //                           ),
+  //                         ),
+  //                       );
+  //                     }
+  //                   });
+  //                 },
+  //                 icon: const Icon(
+  //                   Icons.call,
+  //                   color: Colors.green,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+
 }

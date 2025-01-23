@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void showSnackBar({required BuildContext context, required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -9,6 +10,15 @@ void showSnackBar({required BuildContext context, required String content}) {
     ),
   );
 }
+
+Future<bool> requestPermissions() async {
+    // Request Camera and Microphone permissions
+    PermissionStatus cameraStatus = await Permission.camera.request();
+    PermissionStatus micStatus = await Permission.microphone.request();
+
+    // Return true if both permissions are granted
+    return cameraStatus.isGranted && micStatus.isGranted;
+  }
 
 Future<File?> pickImageFromGallery(BuildContext context) async {
   File? image;

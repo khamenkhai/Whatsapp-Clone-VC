@@ -1,8 +1,10 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 import 'package:vc_testing/features/auth/controller/auth_controller.dart';
 import 'package:vc_testing/features/call/repository/call_repository.dart';
 import 'package:vc_testing/models/call.dart';
@@ -28,10 +30,18 @@ class CallController {
 
   Stream<DocumentSnapshot> get callStream => callRepository.callStream;
 
-  void makeCall(BuildContext context, String receiverName, String receiverUid,
-      String receiverProfilePic, bool isGroupChat) {
+  void makeCall(
+    BuildContext context,
+    String receiverName,
+    String receiverUid,
+    String receiverProfilePic,
+    bool isGroupChat,
+  ) {
     ref.read(userDataAuthProvider).whenData((value) {
-      String callId = const Uuid().v1();
+      // generate calll id
+      String callId =  Random().nextInt(1000).toString();
+
+
       Call senderCallData = Call(
         callerId: auth.currentUser!.uid,
         callerName: value!.name,
@@ -53,11 +63,8 @@ class CallController {
         callId: callId,
         hasDialled: false,
       );
-      if (isGroupChat) {
-        callRepository.makeGroupCall(senderCallData, context, recieverCallData);
-      } else {
-        callRepository.makeCall(senderCallData, context, recieverCallData);
-      }
+
+      callRepository.makeCall(senderCallData, context, recieverCallData,callId);
     });
   }
 

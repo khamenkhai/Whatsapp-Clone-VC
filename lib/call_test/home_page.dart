@@ -3,35 +3,29 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:vc_testing/call_test/call_page.dart';
 import 'package:vc_testing/call_test/voice_call_page.dart'; // Make sure to import permission_handlerort the video call page
 
-class CallScreen extends StatefulWidget {
-  const CallScreen({
-    Key? key,
-    required this.localUserID,
-    required this.localUserName,
-    required this.roomId,
-  }) : super(key: key);
+class CallHomePage extends StatefulWidget {
+  const CallHomePage(
+      {Key? key, required this.localUserID, required this.localUserName})
+      : super(key: key);
 
   final String localUserID;
   final String localUserName;
-  final String roomId;
 
   @override
-  State<CallScreen> createState() => _CallScreenState();
+  State<CallHomePage> createState() => _CallHomePageState();
 }
 
-class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
+class _CallHomePageState extends State<CallHomePage> with TickerProviderStateMixin {
   final roomTextCtrl = TextEditingController();
 
   @override
   void initState() {
-    roomTextCtrl.text = widget.roomId;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -43,7 +37,6 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
             Text('Your userID: ${widget.localUserID}'),
             const SizedBox(height: 20),
             Text('Your userName: ${widget.localUserName}'),
-            Text('ROOM ID: ${widget.roomId}'),
             const SizedBox(height: 20),
             TextFormField(
               controller: roomTextCtrl,
