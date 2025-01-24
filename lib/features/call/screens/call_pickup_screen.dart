@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vc_testing/call_test/call_kit_service.dart';
-import 'package:vc_testing/common/utils/utils.dart';
 import 'package:vc_testing/features/call/controller/call_controller.dart';
-import 'package:vc_testing/features/call/screens/call_screen.dart';
 import 'package:vc_testing/models/call.dart';
 
 class CallPickupScreen extends ConsumerStatefulWidget {
@@ -19,27 +16,9 @@ class CallPickupScreen extends ConsumerStatefulWidget {
 }
 
 class _CallPickupScreenState extends ConsumerState<CallPickupScreen> {
-  final CallKitService _callKitService = CallKitService();
+ 
   bool _hasTriggeredIncomingCall = false; // Track if call has been triggered
 
-  void _triggerIncomingCall({
-    required String callerName,
-    required String roomId,
-    required String localUserID,
-  }) {
-    if (_hasTriggeredIncomingCall) return; // Prevent multiple triggers
-
-    _callKitService.showIncomingCall(
-      callerName: callerName,
-      roomId: roomId,
-      context: context,
-      localUserID: localUserID,
-    );
-
-    setState(() {
-      _hasTriggeredIncomingCall = true; // Mark the call as triggered
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +31,11 @@ class _CallPickupScreenState extends ConsumerState<CallPickupScreen> {
 
           // Trigger incoming call only if not dialed yet
           if (!callData.hasDialled && !_hasTriggeredIncomingCall) {
-            _triggerIncomingCall(
-              callerName: callData.callerName,
-              roomId: callData.callId,
-              localUserID: callData.callId,
-            );
+            // _triggerIncomingCall(
+            //   callerName: callData.callerName,
+            //   roomId: callData.callId,
+            //   localUserID: callData.callId,
+            // );
           }
 
           // Display the UI for the incoming call

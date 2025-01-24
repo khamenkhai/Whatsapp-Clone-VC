@@ -9,7 +9,6 @@ import 'package:vc_testing/features/select_contacts/screens/select_contacts_scre
 import 'package:vc_testing/features/chat/widgets/contacts_list.dart';
 import 'package:vc_testing/features/status/screens/confirm_status_screen.dart';
 import 'package:vc_testing/features/status/screens/status_contacts_screen.dart';
-import 'package:vc_testing/noti_service.dart';
 import 'package:vc_testing/old_noti_service.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
@@ -35,7 +34,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
 
   Future init() async {
     notificationsService.requestPermission();
-    notificationsService.initFirebaseNotification(context);
+    notificationsService.initializeNotifications(context);
   }
 
   @override
@@ -83,15 +82,17 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
               onPressed: () async {
                 NotificationsService notificationsService =
                     NotificationsService();
-                String deviceToken = await notificationsService.getToken();
 
+                String deviceToken =
+                    await notificationsService.getDeviceToken();
                 print("device token : ${deviceToken}");
-
                 notificationsService.sendNotification(
+                  title: "Hello World",
+                  body: "Testing Hehe",
+                  callerName: "Khame",
+                  callerPhone: "09422138010",
                   deviceToken: deviceToken,
-                  context: context,
-                  title: "Noti title!",
-                  body: "noti body",
+                  roomId: "abc123",
                 );
               },
             ),

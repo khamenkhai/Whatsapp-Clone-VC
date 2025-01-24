@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:get/get.dart';
 import 'package:vc_testing/features/call/screens/call_screen.dart';
 
 class CallKitService {
@@ -9,7 +9,6 @@ class CallKitService {
     required String roomId,
     required String callerName,
     required String localUserID,
-    required BuildContext context,
   }) async {
     final params = CallKitParams(
       id: roomId,
@@ -61,134 +60,93 @@ class CallKitService {
 
     // Listen to call events (accept, decline, end)
     _listenToCallEvents(
-      context: context,
       localUserID: localUserID,
       localUserName: callerName,
       roomId: roomId,
     );
   }
 
-  // Helper function to get a unique UUID for each call
-
-
   // Function to listen to call events
   void _listenToCallEvents({
-    required BuildContext context,
     required String localUserID,
     required String localUserName,
     required String roomId,
   }) {
     // Listen for incoming call events
-    FlutterCallkitIncoming.onEvent.listen((CallEvent? event) async {
-      switch (event!.event) {
-        case Event.actionCallIncoming:
-          // TODO: received an incoming call
-          break;
-        case Event.actionCallStart:
-          // TODO: started an outgoing call
-          // TODO: show screen calling in Flutter
-          break;
-        case Event.actionCallAccept:
-          print("testing hello world");
-          _navigateToCallScreen(
-            context: context,
-            localUserID: localUserID,
-            localUserName: localUserName,
-            roomId: roomId,
-          );
-          // TODO: show screen calling in Flutter
-          // Does not work for Android in terminated state
-          // final activeCall = await IncomingCallHelper.getIncomingActiveCall();
-          // if (activeCall != null) {
-          //   logger.d('Navigating to callRoute');
-          //   getIt<AppRouter>().navigate(
-          //     AgoraCallRoute(callData: activeCall.callData),
-          //   );
-          // }
-          break;
-        case Event.actionCallDecline:
-          // TODO: declined an incoming call
-          break;
-        case Event.actionCallEnded:
-          // // End the call
-          // AgoraAvCallController.instance.endCall();
-          break;
-        case Event.actionCallTimeout:
-          // TODO: missed an incoming call
-          break;
-        case Event.actionCallCallback:
-          // TODO: only Android - click action `Call back` from missed call notification
-          break;
-        case Event.actionCallToggleHold:
-          // TODO: only iOS
-          break;
-        case Event.actionCallToggleMute:
-          // Only iOS - mute or unmute the local audio
-          // if (mute) {
-          //   AgoraAvCallController.instance.unMuteLocalAudio();
-          //   mute = false;
-          // } else {
-          //   AgoraAvCallController.instance.muteLocalAudio();
-          //   mute = true;
-          // }
-          break;
-        case Event.actionCallToggleDmtf:
-          // TODO: only iOS
-          break;
-        case Event.actionCallToggleGroup:
-          // TODO: only iOS
-          break;
-        case Event.actionCallToggleAudioSession:
-          // TODO: only iOS
-          break;
-        case Event.actionDidUpdateDevicePushTokenVoip:
-          // TODO: only iOS
-          break;
-        case Event.actionCallCustom:
-          // TODO: for custom action
-          break;
-      }
-    });
-    // FlutterCallkitIncoming.onEvent.listen(
-    //   (event) async {
-    //     print("event : ${event}");
-    //     switch (event) {
-    //       case CallEvent.accept:
-    //         // Handle call acceptance
-    //         _navigateToCallScreen(context);
-    //         break;
+    FlutterCallkitIncoming.onEvent.listen(
+      (CallEvent? event) async {
+        switch (event!.event) {
+          case Event.actionCallIncoming:
+            break;
+          case Event.actionCallStart:
+            break;
+          case Event.actionCallAccept:
+            print("testing hello world");
+            _navigateToCallScreen(
+              localUserID: localUserID,
+              localUserName: localUserName,
+              roomId: roomId,
+            );
 
-    //       case CallEvent.decline:
-    //         // Handle call decline if needed
-    //         break;
-
-    //       case CallEvent.end:
-    //         // Handle call end if needed
-    //         break;
-
-    //       default:
-    //         break;
-    //     }
-    //   },
-    // );
+            // Does not work for Android in terminated state
+            // final activeCall = await IncomingCallHelper.getIncomingActiveCall();
+            // if (activeCall != null) {
+            //   logger.d('Navigating to callRoute');
+            //   getIt<AppRouter>().navigate(
+            //     AgoraCallRoute(callData: activeCall.callData),
+            //   );
+            // }
+            break;
+          case Event.actionCallDecline:
+            break;
+          case Event.actionCallEnded:
+            // // End the call
+            // AgoraAvCallController.instance.endCall();
+            break;
+          case Event.actionCallTimeout:
+            break;
+          case Event.actionCallCallback:
+            break;
+          case Event.actionCallToggleHold:
+            break;
+          case Event.actionCallToggleMute:
+            // Only iOS - mute or unmute the local audio
+            // if (mute) {
+            //   AgoraAvCallController.instance.unMuteLocalAudio();
+            //   mute = false;
+            // } else {
+            //   AgoraAvCallController.instance.muteLocalAudio();
+            //   mute = true;
+            // }
+            break;
+          case Event.actionCallToggleDmtf:
+            break;
+          case Event.actionCallToggleGroup:
+            break;
+          case Event.actionCallToggleAudioSession:
+            break;
+          case Event.actionDidUpdateDevicePushTokenVoip:
+            break;
+          case Event.actionCallCustom:
+            break;
+        }
+      },
+    );
   }
 
   // Navigate to call screen on acceptance
   void _navigateToCallScreen({
-    required BuildContext context,
     required String localUserID,
     required String localUserName,
     required String roomId,
   }) {
     // You can replace this with your actual call screen navigation logic
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => CallScreen(
-                localUserID: localUserID,
-                localUserName: localUserName,
-                roomId: roomId,
-              )),
+    Get.to(
+      CallScreen(
+        localUserID: localUserID,
+        localUserName: localUserName,
+        roomId: roomId,
+      ),
     );
   }
 }

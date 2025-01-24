@@ -8,39 +8,45 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vc_testing/features/auth/controller/auth_controller.dart';
 import 'package:vc_testing/features/call/repository/call_repository.dart';
 import 'package:vc_testing/models/call.dart';
+import 'package:vc_testing/old_noti_service.dart';
 
-final callControllerProvider = Provider((ref) {
-  final callRepository = ref.read(callRepositoryProvider);
-  return CallController(
-    callRepository: callRepository,
-    auth: FirebaseAuth.instance,
-    ref: ref,
-  );
-});
+final callControllerProvider = Provider(
+  (ref) {
+    final callRepository = ref.read(callRepositoryProvider);
+    return CallController(
+      callRepository: callRepository,
+      auth: FirebaseAuth.instance,
+      ref: ref,
+      notificationsService: ref.read(notiServiceProvider),
+    );
+  },
+);
 
 class CallController {
   final CallRepository callRepository;
   final ProviderRef ref;
   final FirebaseAuth auth;
+  final NotificationsService notificationsService;
   CallController({
     required this.callRepository,
     required this.ref,
     required this.auth,
+    required this.notificationsService,
   });
 
   Stream<DocumentSnapshot> get callStream => callRepository.callStream;
 
-  void makeCall(
-    BuildContext context,
-    String receiverName,
-    String receiverUid,
-    String receiverProfilePic,
-    bool isGroupChat,
-  ) {
-    ref.read(userDataAuthProvider).whenData((value) {
+  void makeCall({
+    required BuildContext context,
+    required String receiverName,
+    required String receiverUid,
+    required String receiverProfilePic,
+    required String receiverDeviceToken,
+    required bool isGroupChat,
+  }) async {
+    ref.read(userDataAuthProvider).whenData((value) async {
       // generate calll id
-      String callId =  Random().nextInt(1000).toString();
-
+      String callId = Random().nextInt(10000).toString();
 
       Call senderCallData = Call(
         callerId: auth.currentUser!.uid,
@@ -63,8 +69,20 @@ class CallController {
         callId: callId,
         hasDialled: false,
       );
-
-      callRepository.makeCall(senderCallData, context, recieverCallData,callId);
+      await notificationsService.sendNotification(
+        title: senderCallData.callerName,
+        body: senderCallData.callerName,
+        callerName: recieverCallData.callerName,
+        callerPhone: "Custom phone number",
+        deviceToken: receiverDeviceToken,
+        roomId: callId
+      );
+      await callRepository.makeCall(
+        senderCallData,
+        context,
+        recieverCallData,
+        callId,
+      );
     });
   }
 

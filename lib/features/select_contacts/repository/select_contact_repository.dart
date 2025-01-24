@@ -44,13 +44,16 @@ class SelectContactRepository {
         );
         if (selectedPhoneNum == userData.phoneNumber) {
           isFound = true;
-          Navigator.pushNamed(
+          Navigator.push(
             context,
-            MobileChatScreen.routeName,
-            arguments: {
-              'name': userData.name,
-              'uid': userData.uid,
-            },
+           MaterialPageRoute(builder: (context){
+            return MobileChatScreen(
+              isGroupChat: false,
+              name: userData.name,
+              profilePic: userData.profilePic,
+              uid: userData.uid,
+            );
+           })
           );
         }
       }

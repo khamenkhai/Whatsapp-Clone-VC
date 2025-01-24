@@ -5,6 +5,7 @@ import 'package:vc_testing/common/widgets/error.dart';
 import 'package:vc_testing/features/auth/screens/login_screen.dart';
 import 'package:vc_testing/features/auth/screens/otp_screen.dart';
 import 'package:vc_testing/features/auth/screens/user_information_screen.dart';
+import 'package:vc_testing/features/call/screens/call_screen.dart';
 import 'package:vc_testing/features/group/screens/create_group_screen.dart';
 import 'package:vc_testing/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:vc_testing/features/chat/screens/mobile_chat_screen.dart';
@@ -62,6 +63,20 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case CreateGroupScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const CreateGroupScreen(),
+      );
+    case CallScreen.routeName:
+    
+      final arguments = settings.arguments as Map<String, dynamic>;
+      String localUserID = arguments['localUserID'];
+      final localUserName = arguments['localUserName'];
+      final roomId = arguments['roomId'];
+
+      return MaterialPageRoute(
+        builder: (context) => CallScreen(
+          localUserID: localUserID,
+          localUserName: localUserName,
+          roomId: roomId,
+        ),
       );
     default:
       return MaterialPageRoute(

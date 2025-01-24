@@ -86,6 +86,7 @@ class AuthRepository {
 
   void saveUserDataToFirebase({
     required String name,
+    required String deviceToken,
     required File? profilePic,
     required ProviderRef ref,
     required BuildContext context,
@@ -111,6 +112,7 @@ class AuthRepository {
         isOnline: true,
         phoneNumber: auth.currentUser!.phoneNumber!,
         groupId: [],
+        deviceToken: deviceToken
       );
 
       await firestore.collection('users').doc(uid).set(user.toMap());

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/route_manager.dart';
 import 'package:vc_testing/call_test/key_center.dart';
 import 'package:vc_testing/common/utils/colors.dart';
 import 'package:vc_testing/common/widgets/error.dart';
@@ -42,7 +43,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Whatsapp UI',
       theme: ThemeData.dark().copyWith(
@@ -51,6 +52,7 @@ class MyApp extends ConsumerWidget {
           color: appBarColor,
         ),
       ),
+      
       onGenerateRoute: (settings) => generateRoute(settings),
       home: ref.watch(userDataAuthProvider).when(
             data: (user) {

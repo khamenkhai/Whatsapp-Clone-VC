@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vc_testing/common/utils/utils.dart';
 import 'package:vc_testing/features/auth/controller/auth_controller.dart';
+import 'package:vc_testing/old_noti_service.dart';
 
 class UserInformationScreen extends ConsumerStatefulWidget {
   static const String routeName = '/user-information';
@@ -16,6 +17,8 @@ class UserInformationScreen extends ConsumerStatefulWidget {
 class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
   final TextEditingController nameController = TextEditingController();
   File? image;
+  
+  NotificationsService notificationService = NotificationsService();
 
   @override
   void dispose() {
@@ -28,7 +31,7 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
     setState(() {});
   }
 
-  void storeUserData() async {
+  void storeUserData({required String deviceToken}) async {
     String name = nameController.text.trim();
 
     if (name.isNotEmpty) {
@@ -36,6 +39,7 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
             context,
             name,
             image,
+            deviceToken
           );
     }
   }
@@ -89,7 +93,10 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: storeUserData,
+                    onPressed: ()async{
+                      String deviceToken = await notificationService.getDeviceToken();
+                      storeUserData(deviceToken: deviceToken);
+                    },
                     icon: const Icon(
                       Icons.done,
                     ),

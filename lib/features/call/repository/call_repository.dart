@@ -25,7 +25,7 @@ class CallRepository {
   Stream<DocumentSnapshot> get callStream =>
       firestore.collection('call').doc(auth.currentUser!.uid).snapshots();
 
-  void makeCall(
+  Future makeCall(
     Call senderCallData,
     BuildContext context,
     Call receiverCallData,
