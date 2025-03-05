@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -227,6 +229,8 @@ class ChatRepository {
     required MessageReply? messageReply,
     required bool isGroupChat,
   }) async {
+
+    print("sending text message");
     try {
       var timeSent = DateTime.now();
       UserModel? recieverUserData;

@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:vc_testing/common/widgets/error.dart';
 import 'package:vc_testing/features/auth/screens/login_screen.dart';
-import 'package:vc_testing/features/auth/screens/otp_screen.dart';
-import 'package:vc_testing/features/auth/screens/user_information_screen.dart';
+import 'package:vc_testing/features/call/screens/call_screen.dart';
 import 'package:vc_testing/features/group/screens/create_group_screen.dart';
 import 'package:vc_testing/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:vc_testing/features/chat/screens/mobile_chat_screen.dart';
-import 'package:vc_testing/features/status/screens/confirm_status_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -16,17 +12,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       );
-    case OTPScreen.routeName:
-      final verificationId = settings.arguments as String;
-      return MaterialPageRoute(
-        builder: (context) => OTPScreen(
-          verificationId: verificationId,
-        ),
-      );
-    case UserInformationScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const UserInformationScreen(),
-      );
+    // case OTPScreen.routeName:
+    //   final verificationId = settings.arguments as String;
+    //   return MaterialPageRoute(
+    //     builder: (context) => OTPScreen(
+    //       verificationId: verificationId,
+    //     ),
+    //   );
+    // case UserInformationScreen.routeName:
+    //   return MaterialPageRoute(
+    //     builder: (context) => const UserInformationScreen(),
+    //   );
     case SelectContactsScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const SelectContactsScreen(),
@@ -45,13 +41,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           profilePic: profilePic,
         ),
       );
-    case ConfirmStatusScreen.routeName:
-      final file = settings.arguments as File;
-      return MaterialPageRoute(
-        builder: (context) => ConfirmStatusScreen(
-          file: file,
-        ),
-      );
+    // case ConfirmStatusScreen.routeName:
+    //   final file = settings.arguments as File;
+    //   return MaterialPageRoute(
+    //     builder: (context) => ConfirmStatusScreen(
+    //       file: file,
+    //     ),
+    //   );
     // case StatusScreen.routeName:
     //   final status = settings.arguments as Status;
     //   return MaterialPageRoute(
@@ -62,6 +58,20 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case CreateGroupScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const CreateGroupScreen(),
+      );
+    case CallScreen.routeName:
+    
+      final arguments = settings.arguments as Map<String, dynamic>;
+      String localUserID = arguments['localUserID'];
+      final localUserName = arguments['localUserName'];
+      final roomId = arguments['roomId'];
+
+      return MaterialPageRoute(
+        builder: (context) => CallScreen(
+          localUserID: localUserID,
+          localUserName: localUserName,
+          roomId: roomId,
+        ),
       );
     default:
       return MaterialPageRoute(

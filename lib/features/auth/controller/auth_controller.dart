@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,27 +30,49 @@ class AuthController {
     return user;
   }
 
-  void signInWithPhone(BuildContext context, String phoneNumber) {
-    authRepository.signInWithPhone(context, phoneNumber);
-  }
-
-  void verifyOTP(BuildContext context, String verificationId, String userOTP) {
-    authRepository.verifyOTP(
+  Future<void> signUpWithEmailAndPassword({
+    required BuildContext context,
+    required String email,
+    required String password,
+    required String name,
+    required File? profilePic,
+  }) async {
+    await authRepository.signUpWithEmailAndPassword(
       context: context,
-      verificationId: verificationId,
-      userOTP: userOTP,
-    );
-  }
-
-  void saveUserDataToFirebase(
-      BuildContext context, String name, File? profilePic) {
-    authRepository.saveUserDataToFirebase(
+      email: email,
+      password: password,
       name: name,
       profilePic: profilePic,
       ref: ref,
-      context: context,
     );
   }
+
+  Future<void> signInWithEmailAndPassword({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    await authRepository.signInWithEmailAndPassword(
+      context: context,
+      email: email,
+      password: password,
+    );
+  }
+
+  // void saveUserDataToFirebase(
+  //   BuildContext context,
+  //   String name,
+  //   File? profilePic,
+  // ) {
+  //   authRepository.saveUserDataToFirebase(
+  //     name: name,
+  //     profilePic: profilePic,
+  //     ref: ref,
+  //     context: context,
+  //     email: authRepository.auth.currentUser!.email!,
+  //     uid: authRepository.auth.currentUser!.uid,
+  //   );
+  // }
 
   Stream<UserModel> userDataById(String userId) {
     return authRepository.userData(userId);

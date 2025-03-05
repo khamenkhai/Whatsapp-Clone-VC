@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vc_testing/call_test/call_kit_service.dart';
 import 'package:vc_testing/common/utils/colors.dart';
 import 'package:vc_testing/common/widgets/loader.dart';
 import 'package:vc_testing/features/auth/controller/auth_controller.dart';
@@ -23,13 +24,18 @@ class MobileChatScreen extends ConsumerWidget {
     required this.profilePic,
   }) : super(key: key);
 
-  void makeCall(WidgetRef ref, BuildContext context) {
+  void makeCall({
+    required WidgetRef ref,
+    required BuildContext context,
+    required String receiverToken,
+  }) {
     ref.read(callControllerProvider).makeCall(
-          context,
-          name,
-          uid,
-          profilePic,
-          isGroupChat,
+          context: context,
+          receiverName: name,
+          receiverUid: uid,
+          receiverProfilePic: profilePic,
+          isGroupChat: false,
+          receiverDeviceToken: receiverToken,
         );
   }
 
@@ -59,20 +65,28 @@ class MobileChatScreen extends ConsumerWidget {
                         ),
                       ],
                     );
-                  }),
+                  },
+                ),
           centerTitle: false,
           actions: [
-            IconButton(
-              onPressed: () => makeCall(ref, context),
-              icon: const Icon(Icons.video_call),
+            StreamBuilder<UserModel>(
+              stream: ref.read(authControllerProvider).userDataById(uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Loader();
+                }
+                return IconButton(
+                  onPressed: () => makeCall(
+                      ref: ref, context: context, receiverToken: snapshot.data?.deviceToken ?? ""),
+                  icon: Icon(Icons.video_call),
+                );
+              },
             ),
             IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.call),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
+              onPressed: () {
+                _triggerIncomingCall(context);
+              },
+              icon: const Icon(Icons.notification_add),
             ),
           ],
         ),
@@ -91,6 +105,16 @@ class MobileChatScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _triggerIncomingCall(BuildContext context) {
+    final CallKitService _callKitService = CallKitService();
+
+    _callKitService.showIncomingCall(
+      callerName: "Hello world",
+      localUserID: "adfd",
+      roomId: "dff",
     );
   }
 }

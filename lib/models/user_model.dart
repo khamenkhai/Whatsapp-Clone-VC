@@ -1,6 +1,7 @@
 class UserModel {
   final String name;
   final String uid;
+  final String deviceToken;
   final String profilePic;
   final bool isOnline;
   final String phoneNumber;
@@ -8,6 +9,7 @@ class UserModel {
   UserModel({
     required this.name,
     required this.uid,
+    required this.deviceToken,
     required this.profilePic,
     required this.isOnline,
     required this.phoneNumber,
@@ -22,6 +24,7 @@ class UserModel {
       'isOnline': isOnline,
       'phoneNumber': phoneNumber,
       'groupId': groupId,
+      'deviceToken': deviceToken,
     };
   }
 
@@ -29,6 +32,7 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       uid: map['uid'] ?? '',
+      deviceToken: map['deviceToken'] ?? '',
       profilePic: map['profilePic'] ?? '',
       isOnline: map['isOnline'] ?? false,
       phoneNumber: map['phoneNumber'] ?? '',

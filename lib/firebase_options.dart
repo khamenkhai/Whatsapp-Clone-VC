@@ -50,12 +50,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDS-eHyUlnfVj9JMAZojLJS7WtExTV0oP4',
-    appId: '1:1047187387240:android:5c0b81d7455836ba915cdd',
-    messagingSenderId: '1047187387240',
-    projectId: 'khaiproject-8d74f',
-    databaseURL: 'https://khaiproject-8d74f-default-rtdb.firebaseio.com',
-    storageBucket: 'khaiproject-8d74f.appspot.com',
+    apiKey: 'AIzaSyA-ArrBiM9R2E8uqgRyrgY71Zg_CVtQ_O0',
+    appId: '1:87674806781:android:8cd657b9c100fe8646b994',
+    messagingSenderId: '87674806781',
+    projectId: 'socialmediaproject-a11c2',
+    databaseURL: 'https://socialmediaproject-a11c2-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'socialmediaproject-a11c2.appspot.com',
   );
 
   // static const FirebaseOptions ios = FirebaseOptions(

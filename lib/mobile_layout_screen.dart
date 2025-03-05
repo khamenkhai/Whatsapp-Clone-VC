@@ -7,8 +7,7 @@ import 'package:vc_testing/features/auth/controller/auth_controller.dart';
 import 'package:vc_testing/features/group/screens/create_group_screen.dart';
 import 'package:vc_testing/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:vc_testing/features/chat/widgets/contacts_list.dart';
-import 'package:vc_testing/features/status/screens/confirm_status_screen.dart';
-import 'package:vc_testing/features/status/screens/status_contacts_screen.dart';
+import 'package:vc_testing/old_noti_service.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
   const MobileLayoutScreen({Key? key}) : super(key: key);
@@ -20,11 +19,20 @@ class MobileLayoutScreen extends ConsumerStatefulWidget {
 class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late TabController tabBarController;
+
+  NotificationsService notificationsService = NotificationsService();
+
   @override
   void initState() {
     super.initState();
     tabBarController = TabController(length: 3, vsync: this);
+    init();
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  Future init() async {
+    notificationsService.requestPermission();
+    notificationsService.initializeNotifications(context);
   }
 
   @override
@@ -46,7 +54,6 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
         ref.read(authControllerProvider).setUserState(false);
         break;
       case AppLifecycleState.hidden:
-        // TODO: Handle this case.
     }
   }
 
@@ -70,7 +77,22 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           actions: [
             IconButton(
               icon: const Icon(Icons.search, color: Colors.grey),
-              onPressed: () {},
+              onPressed: () async {
+                NotificationsService notificationsService =
+                    NotificationsService();
+
+                String deviceToken =
+                    await notificationsService.getDeviceToken();
+                print("device token : ${deviceToken}");
+                notificationsService.sendNotification(
+                  title: "Hello World",
+                  body: "Testing Hehe",
+                  callerName: "Khame",
+                  callerPhone: "09422138010",
+                  deviceToken: deviceToken,
+                  roomId: "abc123",
+                );
+              },
             ),
             PopupMenuButton(
               icon: const Icon(
@@ -116,7 +138,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           controller: tabBarController,
           children: const [
             ContactsList(),
-            StatusContactsScreen(),
+           Text("Status"),
             Text('Calls')
           ],
         ),
@@ -127,11 +149,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
             } else {
               File? pickedImage = await pickImageFromGallery(context);
               if (pickedImage != null) {
-                Navigator.pushNamed(
-                  context,
-                  ConfirmStatusScreen.routeName,
-                  arguments: pickedImage,
-                );
+                
               }
             }
           },

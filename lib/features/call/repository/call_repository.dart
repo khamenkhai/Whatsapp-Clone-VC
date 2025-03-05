@@ -25,10 +25,11 @@ class CallRepository {
   Stream<DocumentSnapshot> get callStream =>
       firestore.collection('call').doc(auth.currentUser!.uid).snapshots();
 
-  void makeCall(
+  Future makeCall(
     Call senderCallData,
     BuildContext context,
     Call receiverCallData,
+    String channelId,
   ) async {
     try {
       await firestore
@@ -44,9 +45,9 @@ class CallRepository {
         context,
         MaterialPageRoute(
           builder: (context) => CallScreen(
-            channelId: senderCallData.callId,
-            call: senderCallData,
-            isGroupChat: false,
+            localUserID: senderCallData.callId,
+            localUserName: senderCallData.callerName,
+            roomId: senderCallData.callId,
           ),
         ),
       );
@@ -55,45 +56,7 @@ class CallRepository {
     }
   }
 
-  void makeGroupCall(
-    Call senderCallData,
-    BuildContext context,
-    Call receiverCallData,
-  ) async {
-    try {
-      await firestore
-          .collection('call')
-          .doc(senderCallData.callerId)
-          .set(senderCallData.toMap());
-
-      var groupSnapshot = await firestore
-          .collection('groups')
-          .doc(senderCallData.receiverId)
-          .get();
-      model.Group group = model.Group.fromMap(groupSnapshot.data()!);
-
-      for (var id in group.membersUid) {
-        await firestore
-            .collection('call')
-            .doc(id)
-            .set(receiverCallData.toMap());
-      }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CallScreen(
-            channelId: senderCallData.callId,
-            call: senderCallData,
-            isGroupChat: true,
-          ),
-        ),
-      );
-    } catch (e) {
-      showSnackBar(context: context, content: e.toString());
-    }
-  }
-
+  
   void endCall(
     String callerId,
     String receiverId,
