@@ -39,12 +39,12 @@ class _SelectContactsGroupState extends ConsumerState<SelectContactsGroup> {
                 itemBuilder: (context, index) {
                   final contact = contactList[index];
                   return InkWell(
-                    onTap: () => selectContact(index, contact),
+                    // onTap: () => selectContact(index, contact),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
                         title: Text(
-                          contact.displayName,
+                          contact.name,
                           style: const TextStyle(
                             fontSize: 18,
                           ),

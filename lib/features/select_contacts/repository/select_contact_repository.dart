@@ -19,7 +19,8 @@ class SelectContactRepository {
     required this.firestore,
   });
 
-  Future<List<Contact>> getContacts() async {
+  // Fetch all contacts from the device
+  Future<List<Contact>> getDeviceContacts() async {
     List<Contact> contacts = [];
     try {
       if (await FlutterContacts.requestPermission()) {
@@ -31,39 +32,34 @@ class SelectContactRepository {
     return contacts;
   }
 
-  void selectContact(Contact selectedContact, BuildContext context) async {
+  // Fetch all UserModel objects from the Firestore "users" collection
+  Future<List<UserModel>> getFirebaseUsers() async {
+    List<UserModel> users = [];
     try {
       var userCollection = await firestore.collection('users').get();
-      bool isFound = false;
+      users = userCollection.docs
+          .map((doc) => UserModel.fromMap(doc.data()))
+          .toList();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return users;
+  }
 
-      for (var document in userCollection.docs) {
-        var userData = UserModel.fromMap(document.data());
-        String selectedPhoneNum = selectedContact.phones[0].number.replaceAll(
-          ' ',
-          '',
-        );
-        if (selectedPhoneNum == userData.phoneNumber) {
-          isFound = true;
-          Navigator.push(
-            context,
-           MaterialPageRoute(builder: (context){
-            return MobileChatScreen(
-              isGroupChat: false,
-              name: userData.name,
-              profilePic: userData.profilePic,
-              uid: userData.uid,
-            );
-           })
-          );
-        }
-      }
-
-      if (!isFound) {
-        showSnackBar(
-          context: context,
-          content: 'This number does not exist on this app.',
-        );
-      }
+  // Select a Firebase user and navigate to the chat screen
+  void selectContact(UserModel selectedUser, BuildContext context) async {
+    try {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MobileChatScreen(
+            isGroupChat: false,
+            name: selectedUser.name,
+            profilePic: selectedUser.profilePic,
+            uid: selectedUser.uid,
+          ),
+        ),
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
