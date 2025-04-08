@@ -14,37 +14,63 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final phoneController = TextEditingController();
-
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  bool _isLogin = true; // Toggle between login and registration
 
   @override
   void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
     super.dispose();
-    phoneController.dispose();
   }
 
-  void pickCountry() {
-
+  void _toggleAuthMode() {
+    setState(() {
+      _isLogin = !_isLogin;
+    });
   }
 
-  void sendPhoneNumber() {
-    String phoneNumber = phoneController.text.trim();
-    if (phoneNumber.isNotEmpty) {
-      ref
-          .read(authControllerProvider)
-          .signInWithPhone(context, '$phoneNumber');
+  void _submit() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      showSnackBar(context: context, content: 'Please fill out all fields.');
+      return;
+    }
+
+    if (_isLogin) {
+      // Login
+      ref.read(authControllerProvider).signInWithEmailAndPassword(
+            context: context,
+            email: email,
+            password: password,
+          );
     } else {
-      showSnackBar(context: context, content: 'Fill out all the fields');
+      // Register
+      final name = _nameController.text.trim();
+      if (name.isEmpty) {
+        showSnackBar(context: context, content: 'Please enter your name.');
+        return;
+      }
+      ref.read(authControllerProvider).signUpWithEmailAndPassword(
+            context: context,
+            email: email,
+            password: password,
+            name: name,
+            profilePic: null, // You can add image picker logic here
+          );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Enter your phone number'),
+        title: Text(_isLogin ? 'Login' : 'Register'),
         elevation: 0,
         backgroundColor: backgroundColor,
       ),
@@ -54,34 +80,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('WhatsApp will need to verify your phone number.'),
+              if (!_isLogin) // Show name field only during registration
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    hintText: 'Enter your name',
+                  ),
+                ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  hintText: 'Enter your email',
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  onPressed: _submit,
+                  text: _isLogin ? 'LOGIN' : 'REGISTER',
+                ),
+              ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: pickCountry,
-                child: const Text('Pick Country'),
-              ),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-               
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: size.width * 0.7,
-                    child: TextField(
-                      controller: phoneController,
-                      decoration: const InputDecoration(
-                        hintText: 'phone number',
-                      ),
-                    ),
+                onPressed: _toggleAuthMode,
+                child: Text(
+                  _isLogin
+                      ? 'Create a new account'
+                      : 'I already have an account',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 14,
                   ),
-                ],
-              ),
-              SizedBox(height: size.height * 0.6),
-              SizedBox(
-                width: 90,
-                child: CustomButton(
-                  onPressed: sendPhoneNumber,
-                  text: 'NEXT',
                 ),
               ),
             ],

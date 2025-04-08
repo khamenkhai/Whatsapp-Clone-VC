@@ -7,8 +7,6 @@ import 'package:vc_testing/features/auth/controller/auth_controller.dart';
 import 'package:vc_testing/features/group/screens/create_group_screen.dart';
 import 'package:vc_testing/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:vc_testing/features/chat/widgets/contacts_list.dart';
-import 'package:vc_testing/features/status/screens/confirm_status_screen.dart';
-import 'package:vc_testing/features/status/screens/status_contacts_screen.dart';
 import 'package:vc_testing/old_noti_service.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
@@ -140,7 +138,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           controller: tabBarController,
           children: const [
             ContactsList(),
-            StatusContactsScreen(),
+           Text("Status"),
             Text('Calls')
           ],
         ),
@@ -151,11 +149,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
             } else {
               File? pickedImage = await pickImageFromGallery(context);
               if (pickedImage != null) {
-                Navigator.pushNamed(
-                  context,
-                  ConfirmStatusScreen.routeName,
-                  arguments: pickedImage,
-                );
+                
               }
             }
           },

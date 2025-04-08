@@ -1,5 +1,5 @@
 // import 'package:audioplayers/audioplayers.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vc_testing/common/enums/message_enum.dart';
@@ -49,8 +49,10 @@ class DisplayTextImageGIF extends StatelessWidget {
                   ),
                 );
               })
-            : type == MessageEnum.video
-                ? Container()
+            : type == MessageEnum.image
+                ? CachedNetworkImage(
+                    imageUrl: message,
+                )
                 : Container();
   }
 }
