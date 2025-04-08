@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
-import 'package:vc_testing/call_test/call_kit_service.dart';
 import 'package:vc_testing/service_json.dart';
 
 final notiServiceProvider = Provider((ref) => NotificationsService());
@@ -39,7 +38,7 @@ class NotificationsService {
 
   /// Initialize Firebase notifications
   void initializeNotifications(BuildContext context) async {
-    final callKitService = CallKitService();
+    // final callKitService = CallKitService();
 
   
     // Handle notifications when the app is in the background
@@ -58,11 +57,11 @@ class NotificationsService {
       print("onmessagelisten: ${message.data}");
       if (message.notification != null) {
         if (message.data.isNotEmpty || message.data != {}) {
-          callKitService.showIncomingCall(
-            roomId: message.data['roomId'] ?? '',
-            callerName: message.data["callerName"] ?? "",
-            localUserID: message.data['localUserID'] ?? 'Unknown',
-          );
+          // callKitService.showIncomingCall(
+          //   roomId: message.data['roomId'] ?? '',
+          //   callerName: message.data["callerName"] ?? "",
+          //   localUserID: message.data['localUserID'] ?? 'Unknown',
+          // );
         } else {}
       }
     });
@@ -178,13 +177,13 @@ class NotificationsService {
   ) async {
     print("background message handler : ${message.data}");
 
-    final callKitService = CallKitService();
+    // final callKitService = CallKitService();
 
-    callKitService.showIncomingCall(
-      roomId: "abc",
-      callerName: "ddd",
-      localUserID: "bbb",
-    );
+    // callKitService.showIncomingCall(
+    //   roomId: "abc",
+    //   callerName: "ddd",
+    //   localUserID: "bbb",
+    // );
 
     // if (message.data != {}) {
     //   callKitService.showIncomingCall(

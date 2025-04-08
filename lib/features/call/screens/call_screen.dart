@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:vc_testing/call_test/call_page.dart';
-import 'package:vc_testing/call_test/voice_call_page.dart'; // Make sure to import permission_handlerort the video call page
-
 class CallScreen extends StatefulWidget {
 
   static const routeName = '/call-screen';
@@ -98,16 +95,16 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
               onPressed: () async {
                 bool permissionsGranted = await requestPermissions();
                 if (permissionsGranted) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => VoiceCallPage(
-                        localUserID: widget.localUserID,
-                        localUserName: widget.localUserName,
-                        roomID: roomTextCtrl.text,
-                      ),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => VoiceCallPage(
+                  //       localUserID: widget.localUserID,
+                  //       localUserName: widget.localUserName,
+                  //       roomID: roomTextCtrl.text,
+                  //     ),
+                  //   ),
+                  // );
                 } else {
                   // Handle case when permissions are not granted
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -138,21 +135,21 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
       required String localUserID,
       required String localUserName,
       required bool isVideoCall}) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => isVideoCall
-            ? VideoCallPage(
-                localUserID: localUserID,
-                localUserName: localUserName,
-                roomID: roomID,
-              )
-            : VoiceCallPage(
-                localUserID: localUserID,
-                localUserName: localUserName,
-                roomID: roomID,
-              ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => isVideoCall
+    //         ? VideoCallPage(
+    //             localUserID: localUserID,
+    //             localUserName: localUserName,
+    //             roomID: roomID,
+    //           )
+    //         : VoiceCallPage(
+    //             localUserID: localUserID,
+    //             localUserName: localUserName,
+    //             roomID: roomID,
+    //           ),
+    //   ),
+    
   }
 }

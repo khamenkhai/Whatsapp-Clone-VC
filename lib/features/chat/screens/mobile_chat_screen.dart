@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vc_testing/call_test/call_kit_service.dart';
 import 'package:vc_testing/common/utils/colors.dart';
 import 'package:vc_testing/common/widgets/loader.dart';
 import 'package:vc_testing/features/auth/controller/auth_controller.dart';
@@ -109,12 +108,12 @@ class MobileChatScreen extends ConsumerWidget {
   }
 
   void _triggerIncomingCall(BuildContext context) {
-    final CallKitService _callKitService = CallKitService();
+    // final CallKitService _callKitService = CallKitService();
 
-    _callKitService.showIncomingCall(
-      callerName: "Hello world",
-      localUserID: "adfd",
-      roomId: "dff",
-    );
+    // _callKitService.showIncomingCall(
+    //   callerName: "Hello world",
+    //   localUserID: "adfd",
+    //   roomId: "dff",
+    // );
   }
 }
